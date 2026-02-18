@@ -5,4 +5,4 @@ Windows Registry Editor Version 5.00
 ;  Clique duplo para desinstalar o menu MKD-Pandoc
 ; ══════════════════════════════════════════════════════════
 
-[-HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc]
+[-HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc]
