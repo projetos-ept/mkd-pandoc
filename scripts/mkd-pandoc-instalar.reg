@@ -1,45 +1,41 @@
 Windows Registry Editor Version 5.00
 
 ; ══════════════════════════════════════════════════════════
-;  MKD-Project — Menu de Contexto para arquivos .md
-;  
+;  MKD-Project — Menu de Contexto para .md (MarkText)
+;  Chave: HKCU\SOFTWARE\Classes\Markdown\shell
+;
 ;  Instalação: clique duplo neste arquivo .reg
 ;  Remoção:    execute mkd-pandoc-remover.reg
-;
-;  Ao clicar com botão direito em qualquer .md, aparece:
-;    "MKD-Pandoc → Gerar PDF"
-;    "MKD-Pandoc → Gerar HTML"
 ; ══════════════════════════════════════════════════════════
 
 ; ── Grupo de submenu "MKD-Pandoc" ──
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc]
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc]
 @="MKD-Pandoc"
 "MUIVerb"="MKD-Pandoc"
 "SubCommands"=""
-"Icon"="C:\\Users\\biocl\\OneDrive\\MKD-Project\\mkd-icon.ico"
 
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc\shell]
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc\shell]
 
 ; ── Subopção 1: Gerar PDF ──
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc\shell\01_pdf]
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc\shell\01_pdf]
 @="Gerar PDF"
 "Icon"="C:\\Windows\\System32\\shell32.dll,247"
 
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc\shell\01_pdf\command]
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc\shell\01_pdf\command]
 @="powershell.exe -NoExit -ExecutionPolicy Bypass -Command \"python 'C:\\Users\\biocl\\OneDrive\\MKD-Project\\gerar-pdf.py' '%1'\""
 
 ; ── Subopção 2: Gerar HTML ──
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc\shell\02_html]
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc\shell\02_html]
 @="Gerar HTML"
 "Icon"="C:\\Windows\\System32\\shell32.dll,14"
 
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc\shell\02_html\command]
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc\shell\02_html\command]
 @="powershell.exe -NoExit -ExecutionPolicy Bypass -Command \"python 'C:\\Users\\biocl\\OneDrive\\MKD-Project\\gerar-pdf.py' '%1' --so html\""
 
-; ── Subopção 3: Abrir pasta de saída ──
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc\shell\03_saida]
-@="Abrir pasta Saída"
+; ── Subopção 3: Abrir pasta Saída ──
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc\shell\03_saida]
+@="Abrir pasta Saida"
 "Icon"="C:\\Windows\\System32\\shell32.dll,3"
 
-[HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc\shell\03_saida\command]
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Markdown\shell\MKD-Pandoc\shell\03_saida\command]
 @="explorer.exe \"C:\\Users\\biocl\\OneDrive\\MKD-Project\\saida\""
