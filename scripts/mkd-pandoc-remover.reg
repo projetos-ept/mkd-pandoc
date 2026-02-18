@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+; ══════════════════════════════════════════════════════════
+;  MKD-Project — Remover Menu de Contexto
+;  Clique duplo para desinstalar o menu MKD-Pandoc
+; ══════════════════════════════════════════════════════════
+
+[-HKEY_CLASSES_ROOT\SystemFileAssociations\.md\shell\MKD-Pandoc]
