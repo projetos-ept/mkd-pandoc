@@ -141,42 +141,10 @@ graph TD
     C1 --> T3[Vermelho: Soro / Bioquímica]
 ```
 
-### Questões de Fixação
+### Convite à Reflexão
 
-**Questão 1.** Um paciente chega ao laboratório para realizar dosagem de Glicemia de Jejum e Hemograma. O flebotomista utiliza um tubo de tampa cinza e um de tampa roxa. Qual a função do aditivo do tubo cinza e qual a ordem correta de coleta?
-
-- a) Coagular o sangue; ordem: cinza, depois roxo.
-- b) Quelar cálcio; ordem: roxo, depois cinza.
-- c) Inibir a enolase (glicólise); ordem: roxo, depois cinza.
-- d) Preservar morfologia celular; ordem: cinza, depois roxo.
-- e) Ativar a trombina; ordem: roxo, depois cinza.
-
-::: exemplo
-**Gabarito: C.** O tubo cinza contém Fluoreto de Sódio, que inibe a enolase impedindo o consumo de glicose pelas células. Na ordem de coleta padronizada, o EDTA (roxo) precede o Fluoreto (cinza).
-:::
-
-**Questão 2.** Durante a triagem, o bioquímico observa que o soro apresenta coloração branca-leitosa. Esse aspecto é denominado __________ e está associado à ausência de __________ do paciente.
-
-- a) Hemólise; repouso.
-- b) Icterícia; hidratação.
-- c) Lipemia; jejum.
-- d) Cianose; oxigenação.
-- e) Lipemia; exercício.
-
-::: exemplo
-**Gabarito: C.** A turbidez branco-leitosa é a **lipemia**, causada pelo excesso de triglicérides circulantes — resultado frequente do não cumprimento do jejum adequado antes da coleta.
-:::
-
-**Questão 3.** Diferencie soro de plasma no contexto da bioquímica clínica.
-
-- a) O soro contém fibrinogênio; o plasma, não.
-- b) O plasma é obtido com anticoagulante e contém fibrinogênio; o soro é obtido após coagulação e não contém fibrinogênio.
-- c) O soro é a parte sólida do sangue; o plasma é a líquida.
-- d) Não há diferença química, apenas a cor do tubo muda.
-- e) O plasma é usado somente para hematologia; o soro, somente para urinálise.
-
-::: exemplo
-**Gabarito: B.** O plasma é a fração líquida preservada com anticoagulante (fibrinogênio presente). O soro é o sobrenadante após a formação do coágulo, onde o fibrinogênio foi consumido na formação da rede de fibrina.
+::: dica
+Imagine que um familiar seu foi fazer exames de rotina. O laboratório orientou apenas: "venha em jejum de 8 horas". Nada mais. Ele, como de costume, acordou cedo, foi à academia e treinou pesado antes de ir à coleta — afinal, ninguém disse que não podia. Nenhum profissional perguntou sobre o exercício ou qualquer outra variável. O sangue foi coletado, o resultado saiu e o médico interpretou aqueles números como se fossem o retrato fiel da saúde do seu familiar. Será que eram? Reflita sobre o seu papel como futuro técnico em Análises Clínicas: o que você faria de diferente nesse atendimento?
 :::
 
 ::: referencias
