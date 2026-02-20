@@ -4,96 +4,819 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>$if(titulo)$$titulo$$else$Documento$endif$$if(disciplina)$ - $disciplina$$endif$ . CETEP-LNAB</title>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       FONTES — carregadas do Google Fonts
+       Nunito  → corpo do texto (legível, amigável)
+       Poppins → títulos, rótulos, badges (impacto visual)
+  ──────────────────────────────────────────────────────────────── -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- ─────────────────────────────────────────────────────────────
+       MERMAID.JS — renderiza diagramas de fluxo escritos em código
+       startOnLoad:false → controlamos quando renderizar (via DOMContentLoaded)
+       securityLevel:"loose" → necessário para labels com HTML
+  ──────────────────────────────────────────────────────────────── -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
-    mermaid.initialize({startOnLoad:false,theme:"base",securityLevel:"loose",themeVariables:{primaryColor:"#D6E8F8",primaryBorderColor:"#004B8D",primaryTextColor:"#004B8D",lineColor:"#b0bdd4",secondaryColor:"#D0F0E3",tertiaryColor:"#FFF9C4",fontFamily:"Nunito, sans-serif",fontSize:"13px"}});
-    document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("pre.mermaid code,pre code.mermaid").forEach(function(el){var pre=el.parentElement;var div=document.createElement("div");div.className="mermaid";div.textContent=el.textContent;pre.parentElement.replaceChild(div,pre);});mermaid.run();});
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "base",
+      securityLevel: "loose",
+      themeVariables: {
+        primaryColor:       "#D6E8F8",
+        primaryBorderColor: "#004B8D",
+        primaryTextColor:   "#004B8D",
+        lineColor:          "#b0bdd4",
+        secondaryColor:     "#D0F0E3",
+        tertiaryColor:      "#FFF9C4",
+        fontFamily:         "Nunito, sans-serif",
+        fontSize:           "13px"
+      }
+    });
+
+    /* Converte blocos <pre><code class="mermaid"> gerados pelo Pandoc
+       em <div class="mermaid"> que o Mermaid.js espera encontrar.    */
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("pre.mermaid code, pre code.mermaid").forEach(function (el) {
+        var pre = el.parentElement;
+        var div = document.createElement("div");
+        div.className   = "mermaid";
+        div.textContent = el.textContent;
+        pre.parentElement.replaceChild(div, pre);
+      });
+      mermaid.run();
+    });
   </script>
+
   <style>
-    :root{--azul-inst:#004B8D;--azul-meio:#006DBF;--azul-claro:#D6E8F8;--verde:#00925A;--verde-claro:#D0F0E3;--laranja:#E8610A;--amarelo:#FFE066;--cinza-texto:#2B2B2B;--cinza-leve:#F3F5F8;--branco:#FFFFFF;--sombra:0 3px 12px rgba(0,75,141,.13);}
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    body{background:#E8EDF3;font-family:'Nunito',sans-serif;color:var(--cinza-texto);font-size:15px;line-height:1.85;-webkit-font-smoothing:antialiased;}
-    .book-wrapper{max-width:860px;margin:40px auto;display:flex;flex-direction:column;}
-    .page{background:var(--branco);box-shadow:var(--sombra);border-radius:4px;padding:56px 64px 72px;position:relative;margin-bottom:32px;}
-    .page::before{content:'';display:block;height:6px;background:linear-gradient(90deg,var(--azul-inst) 60%,var(--verde) 100%);position:absolute;top:0;left:0;right:0;border-radius:4px 4px 0 0;}
-    .header-inst{display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:2px solid var(--azul-claro);margin-bottom:26px;}
-    .header-inst .logo-box{width:60px;height:60px;background:var(--azul-inst);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
-    .header-inst .school-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:10.5px;color:var(--azul-inst);text-transform:uppercase;letter-spacing:.07em;line-height:1.4;}
-    .header-inst .meta{font-size:12px;color:#6b7a90;margin-top:5px;}
-    .header-inst .meta strong{color:var(--azul-inst);}
-    .chapter-badge{display:inline-flex;align-items:center;gap:8px;background:var(--azul-inst);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:5px 14px 5px 10px;border-radius:20px;margin-bottom:10px;}
-    .chapter-badge .dot{width:8px;height:8px;background:var(--amarelo);border-radius:50%;}
-    .markdown-body{counter-reset:section;}
-    .markdown-body h1{font-family:'Poppins',sans-serif;font-weight:800;font-size:26px;color:var(--azul-inst);line-height:1.25;margin-bottom:6px;}
-    .markdown-body h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;color:var(--azul-inst);display:flex;align-items:center;gap:10px;margin:36px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--azul-claro);counter-increment:section;}
-    .markdown-body h2::before{content:counter(section);background:var(--azul-inst);color:#fff;font-size:12px;font-weight:700;min-width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
-    .markdown-body h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:var(--azul-meio);margin:22px 0 10px;padding-left:12px;border-left:3px solid var(--verde);}
-    .markdown-body h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;color:var(--cinza-texto);margin:18px 0 8px;}
-    .markdown-body p{margin-bottom:14px;text-align:justify;}
-    .markdown-body strong{color:var(--azul-inst);font-weight:700;}
-    .markdown-body em{font-style:italic;color:#444;}
-    .markdown-body a{color:var(--azul-meio);text-decoration:underline;}
-    .markdown-body ul{list-style:none;padding-left:0;margin:12px 0 18px;}
-    .markdown-body ul li{padding:8px 12px 8px 38px;position:relative;margin-bottom:6px;background:var(--cinza-leve);border-radius:6px;font-size:14.5px;line-height:1.6;}
-    .markdown-body ul li::before{content:'\203A';position:absolute;left:14px;top:5px;font-size:20px;color:var(--verde);font-weight:900;line-height:1;}
-    .markdown-body ul li ul{margin:8px 0 0;}
-    .markdown-body ul li ul li{background:#EAEEF4;font-size:13.5px;}
-    .markdown-body ol{padding-left:24px;margin:12px 0 18px;}
-    .markdown-body ol li{margin-bottom:10px;font-size:14.5px;}
-    .markdown-body ol li::marker{color:var(--azul-inst);font-weight:700;}
-    .markdown-body blockquote{background:#FFF8E1;border-left:5px solid var(--laranja);border-radius:0 8px 8px 0;padding:16px 20px 16px 52px;margin:20px 0;position:relative;}
-    .markdown-body blockquote::before{content:'\2605';position:absolute;left:16px;top:14px;font-size:20px;color:var(--laranja);}
-    .markdown-body blockquote p{margin:0;font-size:14px;text-align:left;}
-    .markdown-body blockquote p:first-child::before{content:'ATENCAO';font-family:'Poppins',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--laranja);display:block;margin-bottom:4px;}
-    .markdown-body .conceito{background:var(--azul-claro);border-left:5px solid var(--azul-inst);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
-    .markdown-body .conceito::before{content:'CONCEITO-CHAVE';display:block;font-family:'Poppins',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--azul-inst);margin-bottom:8px;}
-    .markdown-body .conceito p{margin:0;font-size:14.5px;}
-    .markdown-body .dica{background:#FFF8E1;border-left:5px solid var(--laranja);border-radius:0 8px 8px 0;padding:16px 20px 16px 52px;margin:20px 0;position:relative;}
-    .markdown-body .dica::before{content:'\2605';position:absolute;left:16px;top:14px;font-size:20px;color:var(--laranja);}
-    .markdown-body .dica>p:first-child::before{content:'DICA DE OURO';font-family:'Poppins',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--laranja);display:block;margin-bottom:4px;}
-    .markdown-body .dica p{margin:0;font-size:14px;text-align:left;}
-    .markdown-body .atencao{background:#FFF0F0;border-left:5px solid #D32F2F;border-radius:0 8px 8px 0;padding:16px 20px 16px 52px;margin:20px 0;position:relative;}
-    .markdown-body .atencao::before{content:'!';position:absolute;left:18px;top:12px;font-size:22px;font-weight:900;color:#D32F2F;}
-    .markdown-body .atencao>p:first-child::before{content:'ATENCAO';font-family:'Poppins',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#D32F2F;display:block;margin-bottom:4px;}
-    .markdown-body .atencao p{margin:0;font-size:14px;text-align:left;}
-    .markdown-body .exemplo{background:var(--verde-claro);border-left:5px solid var(--verde);border-radius:0 8px 8px 0;padding:16px 20px 16px 52px;margin:20px 0;position:relative;}
-    .markdown-body .exemplo::before{content:'Ex';position:absolute;left:13px;top:14px;font-size:13px;font-weight:900;color:var(--verde);}
-    .markdown-body .exemplo>p:first-child::before{content:'EXEMPLO PRATICO';font-family:'Poppins',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--verde);display:block;margin-bottom:4px;}
-    .markdown-body .exemplo p{margin:0;font-size:14px;text-align:left;}
-    .markdown-body .referencias{background:var(--cinza-leve);border-radius:8px;padding:14px 18px;font-size:12.5px;color:#6b7a90;margin-top:32px;}
-    .markdown-body .referencias::before{content:'BIBLIOGRAFIA CONSULTADA';display:block;font-family:'Poppins',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--azul-inst);margin-bottom:8px;}
-    .markdown-body .referencias p{margin:0;color:#6b7a90;text-align:left;}
-    .markdown-body pre.mermaid,.markdown-body .mermaid{background:var(--cinza-leve);border:1.5px dashed #b0bdd4;border-radius:10px;padding:24px 16px;margin:20px 0;display:flex;justify-content:center;overflow-x:auto;}
-    .markdown-body .mermaid svg{max-width:100%;height:auto;}
-    .markdown-body table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13.5px;border-radius:8px;overflow:hidden;}
-    .markdown-body thead th{background:var(--azul-inst);color:#fff;padding:11px 16px;text-align:left;font-family:'Poppins',sans-serif;font-weight:600;font-size:12.5px;}
-    .markdown-body tbody td{padding:10px 16px;border-bottom:1px solid #e3e8f0;vertical-align:top;}
-    .markdown-body tbody tr:nth-child(even) td{background:var(--azul-claro);}
-    .markdown-body tbody td:first-child{font-weight:700;color:var(--azul-inst);}
-    .markdown-body code{background:#eef2f7;padding:2px 6px;border-radius:4px;font-size:13px;color:var(--azul-inst);font-family:'Courier New',monospace;}
-    .markdown-body pre:not(.mermaid){background:#f4f4f4;border:1px solid #ddd;border-left:4px solid var(--azul-inst);padding:1em;overflow-x:auto;font-size:13px;line-height:1.5;border-radius:0 6px 6px 0;margin:16px 0;}
-    .markdown-body pre:not(.mermaid) code{background:none;padding:0;color:inherit;}
-    .markdown-body hr{border:none;border-top:2px solid var(--azul-claro);margin:32px 0;}
-    .markdown-body img{max-width:100%;height:auto;border-radius:6px;margin:16px 0;display:block;}
-    .markdown-body figure{margin:20px 0;text-align:center;}
-    .markdown-body figcaption{font-size:12px;color:#6b7a90;margin-top:6px;font-style:italic;}
-    .page-footer{border-top:1.5px solid var(--azul-claro);margin-top:44px;padding-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#8a9ab5;}
-    .page-footer .unit-label{font-weight:700;color:var(--azul-inst);}
-    @media print{body{background:#fff;font-size:11pt;}.book-wrapper{margin:0;}.page{box-shadow:none;margin:0;border-radius:0;padding:20mm 18mm 24mm;page-break-after:always;}.page::before{border-radius:0;}@page{size:A4;margin:0;}}
+    /* ═══════════════════════════════════════════════════════════════
+       VARIÁVEIS GLOBAIS DE COR
+       Centralizam a paleta — altere aqui para mudar o tema inteiro.
+    ═══════════════════════════════════════════════════════════════ */
+    :root {
+      /* Cores institucionais */
+      --azul-inst:   #004B8D;   /* azul escuro CETEP — títulos, bordas */
+      --azul-meio:   #006DBF;   /* azul médio — links, h3 */
+      --azul-claro:  #D6E8F8;   /* azul pastel — fundo conceito, linhas */
+      --verde:       #00925A;   /* verde — h3, bullet, exemplo */
+      --verde-claro: #D0F0E3;   /* verde pastel — fundo exemplo */
+      --laranja:     #E8610A;   /* laranja — dica, blockquote */
+      --amarelo:     #FFE066;   /* amarelo — dot do badge */
+      --cinza-texto: #2B2B2B;   /* cinza escuro — texto padrão */
+      --cinza-leve:  #F3F5F8;   /* cinza claro — fundo listas, refs */
+      --branco:      #FFFFFF;
+      --sombra:      0 3px 12px rgba(0,75,141,.13);
+
+      /* Cores dos novos blocos */
+      --roxo:        #6A1B9A;   /* roxo — reflexão */
+      --roxo-claro:  #EDE7F6;   /* roxo pastel — fundo reflexão */
+      --teal:        #00796B;   /* teal — saiba mais */
+      --teal-claro:  #E0F2F1;   /* teal pastel — fundo saiba mais */
+      --ambar:       #F57F17;   /* âmbar — exercícios */
+      --ambar-claro: #FFF8E1;   /* âmbar pastel — fundo exercícios */
+      --rosa:        #AD1457;   /* rosa — leitura recomendada */
+      --rosa-claro:  #FCE4EC;   /* rosa pastel — fundo leitura */
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       RESET BÁSICO
+    ═══════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BODY — fundo cinza para destacar o "livro" na tela
+    ═══════════════════════════════════════════════════════════════ */
+    body {
+      background: #E8EDF3;
+      font-family: 'Nunito', sans-serif;
+      color: var(--cinza-texto);
+      font-size: 15px;
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BOOK WRAPPER — container centralizado, simula folha sobre mesa
+    ═══════════════════════════════════════════════════════════════ */
+    .book-wrapper {
+      max-width: 860px;
+      margin: 40px auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       PAGE — folha branca com sombra suave e barra colorida no topo
+       padding: topo | lados | base  (4 valores para clareza)
+    ═══════════════════════════════════════════════════════════════ */
+    .page {
+      background: var(--branco);
+      box-shadow: var(--sombra);
+      border-radius: 4px;
+      padding: 56px 64px 72px 64px;
+      position: relative;
+      margin-bottom: 32px;
+    }
+
+    /* Barra de cor institucional no topo da folha */
+    .page::before {
+      content: '';
+      display: block;
+      height: 6px;
+      background: linear-gradient(90deg, var(--azul-inst) 60%, var(--verde) 100%);
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      border-radius: 4px 4px 0 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CABEÇALHO INSTITUCIONAL
+    ═══════════════════════════════════════════════════════════════ */
+    .header-inst {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--azul-claro);
+      margin-bottom: 26px;
+    }
+    .header-inst .logo-box {
+      width: 60px; height: 60px;
+      background: var(--azul-inst);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .header-inst .school-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10.5px;
+      color: var(--azul-inst);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      line-height: 1.4;
+    }
+    .header-inst .meta { font-size: 12px; color: #6b7a90; margin-top: 5px; }
+    .header-inst .meta strong { color: var(--azul-inst); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BADGE DE CAPÍTULO
+    ═══════════════════════════════════════════════════════════════ */
+    .chapter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--azul-inst);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 5px 14px 5px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .chapter-badge .dot {
+      width: 8px; height: 8px;
+      background: var(--amarelo);
+      border-radius: 50%;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BADGE DE APONTAMENTO DE ESTUDO
+       Alternativa ao badge de capítulo para materiais sem numeração:
+       listas de exercícios, resumos avulsos, fichas de revisão, etc.
+       Ativado pela variável YAML:  apontamento: "Resumo de Aula"
+       Visual: índigo azul-arroxeado, ícone 📝, formato pill largo.
+       O texto da variável aparece à direita do ícone — pode ser
+       qualquer rótulo: "Resumo", "Ficha de Revisão", "Lista 01", etc.
+    ═══════════════════════════════════════════════════════════════ */
+    .apontamento-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      /* Índigo — azul-arroxeado, tom universitário */
+      background: #3949AB;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 5px 16px 5px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    /* Ícone 📝 em círculo branco semitransparente à esquerda */
+    .apontamento-badge .apontamento-icon {
+      font-size: 14px;
+      line-height: 1;
+      background: rgba(255,255,255,.18);
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CORPO DO DOCUMENTO — .markdown-body
+       Pandoc injeta o conteúdo convertido aqui.
+    ═══════════════════════════════════════════════════════════════ */
+    .markdown-body { counter-reset: section; }
+
+    /* ── Títulos ─────────────────────────────────────────────── */
+    .markdown-body h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      color: var(--azul-inst);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    /* h2 com contador automático em círculo azul */
+    .markdown-body h2 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--azul-inst);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 36px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--azul-claro);
+      counter-increment: section;
+    }
+    .markdown-body h2::before {
+      content: counter(section);
+      background: var(--azul-inst);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 26px; height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* h3 com barra verde à esquerda */
+    .markdown-body h3 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--azul-meio);
+      margin: 22px 0 10px;
+      padding-left: 12px;
+      border-left: 3px solid var(--verde);
+    }
+    .markdown-body h4 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--cinza-texto);
+      margin: 18px 0 8px;
+    }
+
+    /* ── Texto corrido ───────────────────────────────────────── */
+    .markdown-body p { margin-bottom: 14px; text-align: justify; }
+    .markdown-body strong { color: var(--azul-inst); font-weight: 700; }
+    .markdown-body em { font-style: italic; color: #444; }
+    .markdown-body a { color: var(--azul-meio); text-decoration: underline; }
+
+    /* ── Listas não ordenadas ────────────────────────────────── */
+    .markdown-body ul { list-style: none; padding-left: 0; margin: 12px 0 18px; }
+    .markdown-body ul li {
+      padding: 8px 12px 8px 38px;
+      position: relative;
+      margin-bottom: 6px;
+      background: var(--cinza-leve);
+      border-radius: 6px;
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+    .markdown-body ul li::before {
+      content: '\203A';
+      position: absolute; left: 14px; top: 5px;
+      font-size: 20px;
+      color: var(--verde);
+      font-weight: 900;
+      line-height: 1;
+    }
+    .markdown-body ul li ul { margin: 8px 0 0; }
+    .markdown-body ul li ul li { background: #EAEEF4; font-size: 13.5px; }
+
+    /* ── Listas ordenadas ────────────────────────────────────── */
+    .markdown-body ol { padding-left: 24px; margin: 12px 0 18px; }
+    .markdown-body ol li { margin-bottom: 10px; font-size: 14.5px; }
+    .markdown-body ol li::marker { color: var(--azul-inst); font-weight: 700; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BLOCOS ESPECIAIS — fenced divs do Pandoc  ( ::: classe )
+       Todos seguem o mesmo padrão estrutural:
+         - borda esquerda colorida (5px)
+         - fundo pastel
+         - ::before gera o ícone posicionado (absolute)
+         - >p:first-child::before gera o RÓTULO em maiúsculas
+         - padding-left: 52px → espaço para o ícone
+    ═══════════════════════════════════════════════════════════════ */
+
+    /* ── blockquote genérico (> texto) ──────────────────────── */
+    /* Usado para destaques rápidos sem categoria específica.
+       Visual idêntico ao ::: dica — fundo amarelo, borda laranja.  */
+    .markdown-body blockquote {
+      background: #FFF8E1;
+      border-left: 5px solid var(--laranja);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body blockquote::before {
+      content: '\2605';     /* ★ */
+      position: absolute; left: 16px; top: 14px;
+      font-size: 20px;
+      color: var(--laranja);
+    }
+    .markdown-body blockquote p { margin: 0; font-size: 14px; text-align: left; }
+    .markdown-body blockquote p:first-child::before {
+      content: 'DESTAQUE';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--laranja);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── ::: conceito — CONCEITO-CHAVE ──────────────────────── */
+    /* Definições formais, conceitos centrais.
+       Visual: fundo azul claro, borda azul institucional.
+       Sem ícone posicionado (padding simétrico).                   */
+    .markdown-body .conceito {
+      background: var(--azul-claro);
+      border-left: 5px solid var(--azul-inst);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .markdown-body .conceito::before {
+      content: 'CONCEITO-CHAVE';
+      display: block;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--azul-inst);
+      margin-bottom: 8px;
+    }
+    .markdown-body .conceito p { margin: 0 0 8px; font-size: 14.5px; }
+    .markdown-body .conceito p:last-child { margin-bottom: 0; }
+
+    /* ── ::: dica — DICA DE OURO ────────────────────────────── */
+    /* Macetes de memorização, observações pedagógicas.
+       Visual: fundo amarelo, ★ laranja, borda laranja.             */
+    .markdown-body .dica {
+      background: #FFF8E1;
+      border-left: 5px solid var(--laranja);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .dica::before {
+      content: '\2605';     /* ★ */
+      position: absolute; left: 16px; top: 14px;
+      font-size: 20px;
+      color: var(--laranja);
+    }
+    .markdown-body .dica > p:first-child::before {
+      content: 'DICA DE OURO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--laranja);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .dica p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .dica p:last-child { margin-bottom: 0; }
+
+    /* ── ::: atencao — ATENÇÃO ──────────────────────────────── */
+    /* Alertas, erros conceituais comuns, pontos críticos.
+       Visual: fundo vermelho suave, ! vermelho, borda vermelha.    */
+    .markdown-body .atencao {
+      background: #FFF0F0;
+      border-left: 5px solid #D32F2F;
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .atencao::before {
+      content: '!';
+      position: absolute; left: 18px; top: 12px;
+      font-size: 22px;
+      font-weight: 900;
+      color: #D32F2F;
+    }
+    .markdown-body .atencao > p:first-child::before {
+      content: 'ATENCAO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #D32F2F;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .atencao p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .atencao p:last-child { margin-bottom: 0; }
+
+    /* ── ::: exemplo — EXEMPLO PRÁTICO ─────────────────────── */
+    /* Casos clínicos, exemplos do mundo real.
+       Visual: fundo verde claro, "Ex" verde, borda verde.          */
+    .markdown-body .exemplo {
+      background: var(--verde-claro);
+      border-left: 5px solid var(--verde);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .exemplo::before {
+      content: 'Ex';
+      position: absolute; left: 13px; top: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--verde);
+    }
+    .markdown-body .exemplo > p:first-child::before {
+      content: 'EXEMPLO PRATICO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--verde);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .exemplo p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .exemplo p:last-child { margin-bottom: 0; }
+
+    /* ── ::: reflexao — CONVITE À REFLEXÃO ──────────────────── */
+    /* Questões abertas, cenários, provocações pedagógicas.
+       Visual diferenciado: sem fundo sólido — usa borda tracejada
+       roxa em todos os lados + faixa lateral sólida + cantos
+       arredondados. O efeito "caderno de anotações" destaca o bloco
+       visualmente sem pesar tanto quanto os blocos de alerta.
+       Aceita múltiplos parágrafos com espaço entre eles.           */
+    .markdown-body .reflexao {
+      background: var(--roxo-claro);
+      /* Borda tracejada roxa em todos os lados — identidade visual única */
+      border: 2px dashed var(--roxo);
+      /* Faixa sólida adicional à esquerda sobreposta à borda tracejada */
+      border-left: 5px solid var(--roxo);
+      border-radius: 8px;
+      padding: 20px 22px 20px 56px;
+      margin: 24px 0;
+      position: relative;
+    }
+    /* Ícone ✶ em círculo roxo posicionado à esquerda */
+    .markdown-body .reflexao::before {
+      content: '\2736';   /* ✶ estrela de 6 pontas */
+      position: absolute; left: 14px; top: 18px;
+      font-size: 20px;
+      color: var(--roxo);
+      background: rgba(106,27,154,.12);
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 1;
+      text-align: center;
+      padding-left: 3px;
+    }
+    .markdown-body .reflexao > p:first-child::before {
+      content: 'CONVITE A REFLEXAO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--roxo);
+      display: block;
+      margin-bottom: 6px;
+    }
+    /* Múltiplos parágrafos: espaço entre eles, último sem margem */
+    .markdown-body .reflexao p { margin: 0 0 10px; font-size: 14px; text-align: left; }
+    .markdown-body .reflexao p:last-child { margin-bottom: 0; }
+    /* Linha divisória tracejada entre parágrafos dentro do bloco */
+    .markdown-body .reflexao p + p {
+      padding-top: 10px;
+      border-top: 1px dashed rgba(106,27,154,.25);
+    }
+
+    /* ── ::: saibamais — SAIBA MAIS ─────────────────────────── */
+    /* Aprofundamentos opcionais, curiosidades, contexto extra.
+       Visual: fundo teal pastel, + teal, borda teal.               */
+    .markdown-body .saibamais {
+      background: var(--teal-claro);
+      border-left: 5px solid var(--teal);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .saibamais::before {
+      content: '+';
+      position: absolute; left: 16px; top: 10px;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--teal);
+    }
+    .markdown-body .saibamais > p:first-child::before {
+      content: 'SAIBA MAIS';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--teal);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .saibamais p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .saibamais p:last-child { margin-bottom: 0; }
+
+    /* ── ::: exercicios — EXERCÍCIOS DE FIXAÇÃO ──────────────── */
+    /* Questões, atividades, avaliações formativas.
+       Visual: fundo âmbar pastel, ✎ âmbar, borda âmbar.
+       Listas dentro do bloco recebem estilo especial (sem fundo).   */
+    .markdown-body .exercicios {
+      background: var(--ambar-claro);
+      border-left: 5px solid var(--ambar);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .exercicios::before {
+      content: '\270E';   /* ✎ lápis */
+      position: absolute; left: 14px; top: 12px;
+      font-size: 22px;
+      color: var(--ambar);
+    }
+    .markdown-body .exercicios > p:first-child::before {
+      content: 'EXERCICIOS DE FIXACAO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--ambar);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .exercicios p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .exercicios p:last-child { margin-bottom: 0; }
+    /* Listas dentro de exercícios: remove o fundo cinza das li */
+    .markdown-body .exercicios ul li { background: rgba(245,127,23,.12); }
+    .markdown-body .exercicios ol li { font-size: 14px; }
+
+    /* ── ::: leitura — LEITURA RECOMENDADA ──────────────────── */
+    /* Indicações bibliográficas extras, sugestões de aprofundamento.
+       Visual: fundo rosa pastel, 📖 rosa, borda rosa.              */
+    .markdown-body .leitura {
+      background: var(--rosa-claro);
+      border-left: 5px solid var(--rosa);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .leitura::before {
+      content: '\1F4D6';   /* 📖 */
+      position: absolute; left: 12px; top: 11px;
+      font-size: 20px;
+    }
+    .markdown-body .leitura > p:first-child::before {
+      content: 'LEITURA RECOMENDADA';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--rosa);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .leitura p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .leitura p:last-child { margin-bottom: 0; }
+
+    /* ── ::: referencias — BIBLIOGRAFIA CONSULTADA ──────────── */
+    /* Lista de fontes ao final do documento.
+       Visual: fundo cinza, sem ícone posicionado, texto discreto.  */
+    .markdown-body .referencias {
+      background: var(--cinza-leve);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 12.5px;
+      color: #6b7a90;
+      margin-top: 32px;
+    }
+    .markdown-body .referencias::before {
+      content: 'BIBLIOGRAFIA CONSULTADA';
+      display: block;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--azul-inst);
+      margin-bottom: 8px;
+    }
+    .markdown-body .referencias p { margin: 0 0 6px; color: #6b7a90; text-align: left; }
+    .markdown-body .referencias p:last-child { margin-bottom: 0; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       DIAGRAMAS MERMAID
+       O Playwright aguarda MERMAID_TIMEOUT ms antes de imprimir
+       para garantir que os SVGs foram gerados.
+    ═══════════════════════════════════════════════════════════════ */
+    .markdown-body pre.mermaid,
+    .markdown-body .mermaid {
+      background: var(--cinza-leve);
+      border: 1.5px dashed #b0bdd4;
+      border-radius: 10px;
+      padding: 24px 16px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+    }
+    .markdown-body .mermaid svg { max-width: 100%; height: auto; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       TABELAS
+    ═══════════════════════════════════════════════════════════════ */
+    .markdown-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13.5px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .markdown-body thead th {
+      background: var(--azul-inst);
+      color: #fff;
+      padding: 11px 16px;
+      text-align: left;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 12.5px;
+    }
+    .markdown-body tbody td {
+      padding: 10px 16px;
+      border-bottom: 1px solid #e3e8f0;
+      vertical-align: top;
+    }
+    .markdown-body tbody tr:nth-child(even) td { background: var(--azul-claro); }
+    .markdown-body tbody td:first-child { font-weight: 700; color: var(--azul-inst); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CÓDIGO INLINE E BLOCOS DE CÓDIGO
+    ═══════════════════════════════════════════════════════════════ */
+    .markdown-body code {
+      background: #eef2f7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--azul-inst);
+      font-family: 'Courier New', monospace;
+    }
+    .markdown-body pre:not(.mermaid) {
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      border-left: 4px solid var(--azul-inst);
+      padding: 1em;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+    }
+    .markdown-body pre:not(.mermaid) code { background: none; padding: 0; color: inherit; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ELEMENTOS DIVERSOS
+    ═══════════════════════════════════════════════════════════════ */
+    .markdown-body hr { border: none; border-top: 2px solid var(--azul-claro); margin: 32px 0; }
+    .markdown-body img { max-width: 100%; height: auto; border-radius: 6px; margin: 16px 0; display: block; }
+    .markdown-body figure { margin: 20px 0; text-align: center; }
+    .markdown-body figcaption { font-size: 12px; color: #6b7a90; margin-top: 6px; font-style: italic; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       RODAPÉ DA PÁGINA
+    ═══════════════════════════════════════════════════════════════ */
+    .page-footer {
+      border-top: 1.5px solid var(--azul-claro);
+      margin-top: 44px;
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #8a9ab5;
+    }
+    .page-footer .unit-label { font-weight: 700; color: var(--azul-inst); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       @MEDIA PRINT — regras aplicadas APENAS ao imprimir / gerar PDF
+       ─────────────────────────────────────────────────────────────
+       CORREÇÃO DE MARGEM:
+       O Playwright usa @page { margin: 0 } para desativar as margens
+       nativas do Chromium, delegando todo o espaçamento ao padding
+       do .page. Isso garante que o cabeçalho, a barra colorida e o
+       rodapé fiquem dentro da área controlada pelo CSS, não pela
+       engine de impressão.
+
+       padding: 20mm 18mm 24mm 18mm
+         topo   → 20mm  (respiro acima do cabeçalho institucional)
+         lados  → 18mm  (margens esquerda e direita)
+         base   → 24mm  (respiro abaixo do rodapé; maior para encad.)
+
+       IMPORTANTE: Se quiser margens simétricas use padding: 18mm;
+       Se quiser margens compactas use padding: 14mm 16mm 18mm 16mm;
+    ═══════════════════════════════════════════════════════════════ */
+    @media print {
+      html, body {
+        /* Dimensões explícitas garantem que o Chromium headless
+           calcule corretamente a área de impressão em A4             */
+        width: 210mm;
+        background: white;
+        font-size: 11pt;
+      }
+      .book-wrapper {
+        margin: 0;
+      }
+      .page {
+        box-shadow: none;
+        margin: 0 !important;
+        border-radius: 0;
+        width: 210mm;
+        min-height: 297mm;
+
+        /* !important é necessário: o Chromium headless aplica o padding
+           da regra de tela (56px 64px 72px 64px) sobre o @media print,
+           ignorando a regra de impressão sem !important.
+           Margem simétrica padrão acadêmico: 18mm em todos os lados.
+           Para margens de encadernação use: 20mm 18mm 24mm 18mm
+           Para layout compacto use:         14mm 16mm 18mm 16mm       */
+        padding: 18mm !important;
+
+        page-break-after: always;
+      }
+      .page::before {
+        border-radius: 0;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 0mm;   /* Todo espaçamento vem do padding acima */
+      }
+    }
   </style>
 </head>
 <body>
 <div class="book-wrapper">
 <article class="page">
+
+  <!-- ── Cabeçalho institucional ─────────────────────────────── -->
   <header class="header-inst">
     <div class="logo-box">
-  <img src="https://raw.githubusercontent.com/projetos-ept/images/main/marktext/logo-cetep-lnab.png"
-       style="width:48px;height:48px;object-fit:contain;border-radius:4px;">
-</div>
+      <img src="https://raw.githubusercontent.com/projetos-ept/images/main/marktext/logo-cetep-lnab.png"
+           style="width:48px;height:48px;object-fit:contain;border-radius:4px;"
+           alt="Logo CETEP-LNAB">
+    </div>
     <div>
-      <div class="school-name">Centro Territorial de Educacao Profissional<br>do Litoral Norte e Agreste Baiano &mdash; CETEP-LNAB</div>
+      <div class="school-name">
+        Centro Territorial de Educacao Profissional<br>
+        do Litoral Norte e Agreste Baiano &mdash; CETEP-LNAB
+      </div>
       <div class="meta">
         $if(turma)$Turma: <strong>$turma$</strong>$endif$
         $if(disciplina)$ &nbsp;|&nbsp; Disciplina: <strong>$disciplina$</strong>$endif$
@@ -102,16 +825,42 @@
       </div>
     </div>
   </header>
+
+  <!-- ── Badge de capítulo (opcional via YAML) ───────────────── -->
+  <!-- Uso: adicione  capitulo: "1"  no front matter YAML do .md  -->
   $if(capitulo)$
   <div class="chapter-badge"><span class="dot"></span> Capitulo $capitulo$</div>
   $endif$
+
+  <!-- ── Badge de apontamento (alternativa ao capítulo) ────────── -->
+  <!-- Uso: adicione  apontamento: "Resumo de Aula"  no YAML.      -->
+  <!-- Ideal para materiais sem numeração de capítulo:             -->
+  <!--   apontamento: "Resumo"  |  "Lista 01"  |  "Ficha de Revisão" -->
+  <!-- Não use capitulo e apontamento no mesmo documento.          -->
+  $if(apontamento)$
+  <div class="apontamento-badge">
+    <span class="apontamento-icon">&#x1F4DD;</span> $apontamento$
+  </div>
+  $endif$
+
+  <!-- ── Corpo do documento gerado pelo Pandoc ──────────────── -->
   <div class="markdown-body">
     $body$
   </div>
+
+  <!-- ── Rodapé da página ───────────────────────────────────── -->
   <footer class="page-footer">
-    <div><span class="unit-label">CETEP-LNAB</span>$if(disciplina)$ &middot; $disciplina$$endif$$if(unidade)$ &middot; $unidade$$endif$</div>
-    <div>$if(professor)$&copy; $professor$$endif$$if(ano)$ &middot; $ano$$endif$</div>
+    <div>
+      <span class="unit-label">CETEP-LNAB</span>
+      $if(disciplina)$ &middot; $disciplina$$endif$
+      $if(unidade)$ &middot; $unidade$$endif$
+    </div>
+    <div>
+      $if(professor)$&copy; $professor$$endif$
+      $if(ano)$ &middot; $ano$$endif$
+    </div>
   </footer>
+
 </article>
 </div>
 </body>
