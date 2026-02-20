@@ -11,14 +11,15 @@ sem servidor e sem ferramentas pagas.
 
 1. [Visão geral](#visão-geral)
 2. [Requisitos e instalação — Windows](#requisitos-e-instalação--windows)
-3. [Requisitos e instalação — Linux](#requisitos-e-instalação--linux)
+3. [Requisitos e instalação — Linux/Debian](#requisitos-e-instalação--linuxdebian)
 4. [Estrutura do projeto](#estrutura-do-projeto)
 5. [Fluxo de trabalho diário](#fluxo-de-trabalho-diário)
 6. [Front matter YAML](#front-matter-yaml)
 7. [Marcadores de estilo no Markdown](#marcadores-de-estilo-no-markdown)
 8. [Imagens](#imagens)
 9. [Diagramas Mermaid](#diagramas-mermaid)
-10. [Solução de problemas](#solução-de-problemas)
+10. [Ajuste de margens no PDF](#ajuste-de-margens-no-pdf)
+11. [Solução de problemas](#solução-de-problemas)
 
 ---
 
@@ -41,6 +42,10 @@ saida/documento.pdf
 ```
 
 O script `gerar-pdf.py` executa os dois passos automaticamente com um único comando.
+
+> **Importante:** o HTML incorpora todo o CSS do `cetep.html` no momento em que
+> o Pandoc roda. Se você substituir o `cetep.html`, sempre regenere o HTML
+> executando o script novamente — nunca reutilize um HTML gerado com a versão antiga.
 
 ---
 
@@ -112,7 +117,10 @@ python -m playwright install chromium
 
 ---
 
-## Requisitos e instalação — Linux
+## Requisitos e instalação — Linux/Debian
+
+O pipeline funciona em servidores Debian/Ubuntu **sem desktop** — o Chromium
+opera em modo headless e não exige ambiente gráfico.
 
 ### Distribuições baseadas em Debian/Ubuntu
 
@@ -124,10 +132,23 @@ sudo apt update && sudo apt install pandoc -y
 sudo apt install python3 python3-pip -y
 
 # Playwright
-pip3 install playwright
-playwright install chromium
-playwright install-deps chromium
+pip3 install playwright --break-system-packages
+python3 -m playwright install chromium
+python3 -m playwright install-deps chromium
 ```
+
+O comando `install-deps` instala as bibliotecas de sistema necessárias para o
+Chromium headless (`libnss3`, `libatk1.0-0`, `libgbm1` etc.). Se não tiver
+acesso root, instale-as manualmente:
+
+```bash
+sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
+  libxrandr2 libgbm1 libasound2
+```
+
+> **Containers e VPS restritos:** se o Chromium falhar com erro de sandbox,
+> adicione `args=["--no-sandbox"]` ao `p.chromium.launch()` no `gerar-pdf.py`.
 
 ### Distribuições baseadas em Arch
 
@@ -193,13 +214,18 @@ cd ~/MKD-Project/documentos
 python3 ../gerar-pdf.py NomeDoDocumento.md
 ```
 
+**Linux — servidor sem desktop (use sempre `--nao-abrir`):**
+```bash
+python3 ../gerar-pdf.py NomeDoDocumento.md --nao-abrir
+```
+
 ### Passo 3 — Resultado esperado
 
 ```
-→ Convertendo Cap01-Parasitologia.md com Pandoc...
-✓ HTML gerado: .../saida/Cap01-Parasitologia.html
-→ Gerando PDF com Playwright...
-✓ PDF gerado:  .../saida/Cap01-Parasitologia.pdf
+→ Etapa 1/2 — Pandoc: Cap01-Parasitologia.md
+✓ HTML gerado: .../saida/Cap01-Parasitologia.html  (48.3 KB)
+→ Etapa 2/2 — Playwright: gerando PDF...
+✓ PDF gerado:  .../saida/Cap01-Parasitologia.pdf  (312.1 KB)
 ✓ Concluído!
 ```
 
@@ -237,15 +263,21 @@ ano: "2025"
 
 ### Variáveis disponíveis
 
-| Variável | Obrigatória | Onde aparece no documento | Exemplo |
-|----------|:-----------:|---------------------------|---------|
+| Variável | Obrigatória | Onde aparece | Exemplo |
+|----------|:-----------:|--------------|---------|
 | `turma` | Sim | Cabeçalho | `1TACM1-M2` |
 | `disciplina` | Sim | Cabeçalho e rodapé | `Parasitologia` |
 | `professor` | Sim | Cabeçalho e rodapé | `Lucas Batista` |
-| `capitulo` | Sim | Badge azul no topo | `"1"` |
+| `capitulo` | Não¹ | Badge azul no topo | `"1"` |
+| `apontamento` | Não¹ | Badge índigo no topo | `"Resumo"` |
 | `titulo` | Sim | Título da aba do browser | `"O que é Parasitologia?"` |
+| `subtitulo` | Não | Subtítulo abaixo do título | `"Conceitos e classificação"` |
 | `unidade` | Não | Rodapé | `Unidade 1` |
 | `ano` | Não | Cabeçalho e rodapé | `"2025"` |
+
+> ¹ Use **ou** `capitulo` **ou** `apontamento` — nunca os dois no mesmo documento.
+> `capitulo` gera um badge azul numerado; `apontamento` gera um badge índigo com
+> ícone 📝 e texto livre (ex.: `"Resumo"`, `"Lista 01"`, `"Ficha de Revisão"`).
 
 > **Dica:** valores numéricos como `capitulo` e `ano` devem ficar
 > entre aspas (`"1"`) para o Pandoc tratá-los como texto.
@@ -298,7 +330,7 @@ Para lembrar: o Hospedeiro **D**efinitivo tem o parasita **D**esenvolvido
 
 **Quando usar:** alertas, erros conceituais comuns, pontos críticos de prova.
 
-**Visual:** fundo vermelho suave · barra lateral vermelha · rótulo ATENÇÃO
+**Visual:** fundo vermelho suave · barra lateral vermelha · ! · rótulo ATENÇÃO
 
 ```markdown
 ::: atencao
@@ -313,7 +345,7 @@ O vetor transporta o parasita; o HI hospeda uma fase do ciclo biológico.
 
 **Quando usar:** casos clínicos, exemplos do mundo real, aplicações práticas.
 
-**Visual:** fundo verde claro · barra lateral verde · rótulo EXEMPLO PRÁTICO
+**Visual:** fundo verde claro · barra lateral verde · Ex · rótulo EXEMPLO PRÁTICO
 
 ```markdown
 ::: exemplo
@@ -324,9 +356,81 @@ se fixa na mucosa intestinal e suga sangue continuamente — ação espoliativa.
 
 ---
 
+### `::: reflexao` — Box Convite à Reflexão
+
+**Quando usar:** questões abertas, cenários para debate, provocações pedagógicas
+que exigem resposta elaborada do aluno.
+
+**Visual:** fundo roxo pastel · borda tracejada roxa em todos os lados ·
+ícone ✶ em círculo · rótulo CONVITE À REFLEXÃO · separador tracejado entre parágrafos
+
+```markdown
+::: reflexao
+Imagine que um familiar foi fazer exames e treinou pesado antes da coleta,
+sem que ninguém o orientasse. O resultado reflete fielmente a saúde dele?
+
+Reflita sobre o seu papel como futuro técnico: o que você faria diferente
+nesse atendimento?
+:::
+```
+
+> Aceita múltiplos parágrafos. Cada parágrafo recebe uma linha divisória
+> tracejada roxa entre eles — efeito visual de "caderno de anotações".
+
+---
+
+### `::: saibamais` — Box Saiba Mais
+
+**Quando usar:** aprofundamentos opcionais, curiosidades, contexto histórico
+ou científico extra que não é obrigatório para a avaliação.
+
+**Visual:** fundo teal pastel · barra lateral teal · + · rótulo SAIBA MAIS
+
+```markdown
+::: saibamais
+O termo "parasito" deriva do grego *parasitos* — aquele que come
+na mesa de outro. O conceito foi formalizado na Biologia no século XIX.
+:::
+```
+
+---
+
+### `::: exercicios` — Box Exercícios de Fixação
+
+**Quando usar:** questões, atividades práticas, avaliações formativas,
+listas de exercícios incorporadas ao material didático.
+
+**Visual:** fundo âmbar pastel · barra lateral âmbar · ✎ · rótulo EXERCÍCIOS DE FIXAÇÃO
+
+```markdown
+::: exercicios
+1. Diferencie hospedeiro definitivo de hospedeiro intermediário.
+2. Cite dois exemplos de vetores biológicos e as doenças que transmitem.
+3. O que é ação patogênica espoliativa? Dê um exemplo clínico.
+:::
+```
+
+---
+
+### `::: leitura` — Box Leitura Recomendada
+
+**Quando usar:** indicações bibliográficas extras, sugestões de aprofundamento,
+capítulos específicos de livros ou artigos complementares.
+
+**Visual:** fundo rosa pastel · barra lateral rosa · 📖 · rótulo LEITURA RECOMENDADA
+
+```markdown
+::: leitura
+NEVES, D. P. *Parasitologia Humana*. São Paulo: Atheneu, 2016.
+Capítulos 1 e 2 — Introdução e Classificação dos Parasitos.
+:::
+```
+
+---
+
 ### `::: referencias` — Box Bibliografia
 
-**Quando usar:** ao final do documento para listar as fontes consultadas.
+**Quando usar:** ao final do documento para listar todas as fontes consultadas.
 
 **Visual:** fundo cinza · rótulo BIBLIOGRAFIA CONSULTADA
 
@@ -371,6 +475,10 @@ Funciona normalmente dentro de qualquer bloco:
 | `::: dica` | Laranja/Amarelo | DICA DE OURO | Macetes pedagógicos |
 | `::: atencao` | Vermelho | ATENÇÃO | Alertas e erros comuns |
 | `::: exemplo` | Verde | EXEMPLO PRÁTICO | Casos clínicos |
+| `::: reflexao` | Roxo | CONVITE À REFLEXÃO | Questões abertas para debate |
+| `::: saibamais` | Teal | SAIBA MAIS | Aprofundamentos opcionais |
+| `::: exercicios` | Âmbar | EXERCÍCIOS DE FIXAÇÃO | Questões e atividades |
+| `::: leitura` | Rosa | LEITURA RECOMENDADA | Indicações bibliográficas |
 | `::: referencias` | Cinza | BIBLIOGRAFIA | Fontes ao final |
 | `> texto` | Laranja | — | Destaque rápido genérico |
 
@@ -472,6 +580,84 @@ graph LR
 
 ---
 
+## Ajuste de margens no PDF
+
+As margens do PDF são controladas **exclusivamente pelo CSS** dentro do `cetep.html`,
+no bloco `@media print`. O `gerar-pdf.py` passa `margin: "0"` ao Playwright e deixa
+toda a responsabilidade de espaçamento para o template.
+
+### Como funciona
+
+```css
+/* Trecho relevante do @media print no cetep.html */
+.page {
+    padding: 18mm !important;   /* ← margem de todos os lados no PDF */
+}
+@page {
+    size: A4 portrait;
+    margin: 0mm;
+}
+```
+
+### Para ajustar as margens
+
+Edite o valor de `padding` na regra `.page` dentro do bloco `@media print`
+no `cetep.html`. Exemplos:
+
+```css
+/* Simétrico padrão (padrão atual) */
+padding: 18mm !important;
+
+/* Encadernação (mais espaço no topo e base) */
+padding: 20mm 18mm 24mm 18mm !important;
+
+/* Compacto (mais conteúdo por página) */
+padding: 14mm 16mm 18mm 16mm !important;
+```
+
+> A notação é: `topo direita base esquerda` (sentido horário, como no CSS padrão).
+
+### ⚠️ Atenção: possíveis problemas com margem superior e inferior
+
+O Chromium headless tem um comportamento particular ao gerar PDFs: ele renderiza
+o layout da página em **modo tela** antes de imprimir. Isso pode fazer com que
+o `padding-top` e o `padding-bottom` do `.page` no `@media print` não sejam
+aplicados corretamente em todas as versões do Playwright/Chromium, resultando
+em margens verticais menores ou maiores do que o esperado.
+
+**Sintomas comuns:**
+
+- Margem superior quase zero — o cabeçalho do documento cola no topo da folha.
+- Margem inferior ausente — o rodapé cola na borda inferior.
+- Margem superior maior que a configurada — a barra colorida do topo do `.page`
+  soma espaço adicional ao padding.
+
+**O que fazer se as margens verticais estiverem incorretas:**
+
+Ajuste o `padding-top` e `padding-bottom` separadamente no bloco `@media print`
+do `cetep.html`, usando `!important` em cada um:
+
+```css
+@media print {
+  .page {
+    padding-top:    22mm !important;   /* aumente se o topo estiver colado */
+    padding-bottom: 20mm !important;   /* aumente se o rodapé estiver colado */
+    padding-left:   18mm !important;
+    padding-right:  18mm !important;
+  }
+}
+```
+
+Ajuste em incrementos de 2mm, gere o PDF e meça visualmente até o resultado
+ficar satisfatório. Os valores ideais podem variar conforme a versão do
+Chromium instalada no sistema.
+
+**Nota sobre margens laterais:** as margens esquerda e direita tendem a ser
+mais estáveis entre versões, pois dependem diretamente do `padding` lateral
+do `.page` sem interferência da barra decorativa `::before` que existe no topo.
+
+---
+
 ## Solução de problemas
 
 **`pandoc: command not found`**
@@ -491,6 +677,11 @@ O arquivo PDF anterior está aberto. Feche-o e execute novamente.
 O `cetep.html` não foi encontrado. Verifique o caminho da variável
 `TEMPLATE` no `gerar-pdf.py`.
 
+**Estilos corretos no HTML mas incorretos no PDF**
+O HTML foi gerado com uma versão antiga do `cetep.html`. O CSS é incorporado
+no HTML no momento do Pandoc — substitua o `cetep.html` e rode o script
+novamente para regenerar o HTML antes de gerar o PDF.
+
 **Fontes não carregadas no PDF**
 O Playwright precisa de internet para baixar as fontes do Google Fonts
 na primeira vez. Em ambientes offline, substitua os links no `cetep.html`
@@ -498,11 +689,24 @@ por fontes locais ou fontes do sistema.
 
 **Erro `PermissionError` com OneDrive**
 O OneDrive bloqueia arquivos durante a sincronização. Defina a pasta
-`saida/` fora do OneDrive alterando a variável `SAIDA` no `gerar-pdf.py`:
+`saida/` fora do OneDrive alterando a variável `SAIDA_PADRAO` no `gerar-pdf.py`:
 ```python
-SAIDA = Path(r"D:\CETEP-saida")
+SAIDA_PADRAO = Path(r"D:\CETEP-saida")
 ```
 
 **Diagramas Mermaid com "Syntax error"**
 Verifique: palavras reservadas (`end`, `if`, `class`) usadas como rótulos
 sem aspas, aspas mal fechadas, ou indentação incorreta em subgraphs.
+
+**Erro de sandbox no Linux/Docker**
+O Chromium headless pode falhar em containers com seccomp restritivo.
+Edite o `gerar-pdf.py` e adicione `args=["--no-sandbox"]` ao launch:
+```python
+browser = p.chromium.launch(args=["--no-sandbox"])
+```
+
+**`xdg-open: command not found` em servidor Linux**
+Use sempre o parâmetro `--nao-abrir` em ambientes sem desktop:
+```bash
+python3 gerar-pdf.py documento.md --nao-abrir
+```
