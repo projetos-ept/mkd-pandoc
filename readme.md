@@ -710,3 +710,109 @@ Use sempre o parâmetro `--nao-abrir` em ambientes sem desktop:
 ```bash
 python3 gerar-pdf.py documento.md --nao-abrir
 ```
+
+---
+
+## API HTTP
+
+Além do uso via linha de comando, o projeto pode rodar como uma **API HTTP**
+(FastAPI): você envia o `.md` estruturado e recebe o PDF (ou HTML) de volta.
+O código fica na pasta `api/` e usa o mesmo pipeline do `gerar-pdf.py`
+(Pandoc + `templates/cetep.html` + Playwright/Chromium).
+
+### Rotas
+
+| Método | Rota                     | Autenticação | Descrição |
+|--------|--------------------------|--------------|-----------|
+| GET    | `/saude`                 | não          | Verifica Pandoc, template e Chromium |
+| POST   | `/converter`             | sim          | JSON `{"markdown": "...", "formato": "pdf"\|"html"}` → arquivo |
+| POST   | `/converter/com-imagens` | sim          | multipart com imagens locais via SML Storage |
+| GET    | `/docs`                  | não          | Documentação interativa (Swagger) |
+
+Autenticação: envie o header `X-API-Key` com o valor da variável de
+ambiente `API_KEY` definida no servidor.
+
+### Variáveis de ambiente
+
+| Variável               | Obrigatória | Padrão | Descrição |
+|------------------------|-------------|--------|-----------|
+| `API_KEY`              | sim         | —      | Chave exigida no header `X-API-Key` |
+| `SML_STORAGE_ENDPOINT` | não         | `https://us-east1-sml-storage.cloudfunctions.net` | Base da SML Storage API |
+| `SML_STORAGE_API_KEY`  | só p/ imagens | —    | Chave `x-api-key` da SML Storage |
+| `SML_PROJETO`          | não         | `mkd-pandoc` | Nome do projeto no SML Storage |
+| `MERMAID_TIMEOUT`      | não         | `2500` | Espera (ms) para o Mermaid renderizar |
+
+### Rodando localmente
+
+```bash
+pip install -r requirements.txt
+playwright install chromium
+
+API_KEY=minha-chave uvicorn api.main:app --host 0.0.0.0 --port 8000
+```
+
+Convertendo um documento:
+
+```bash
+# monta o JSON a partir de um arquivo .md
+python3 -c "import json; print(json.dumps({'markdown': open('modelos/modelo.md', encoding='utf-8').read()}))" > /tmp/req.json
+
+curl -X POST http://localhost:8000/converter \
+     -H "X-API-Key: minha-chave" \
+     -H "Content-Type: application/json" \
+     -d @/tmp/req.json \
+     -o documento.pdf
+```
+
+### Imagens locais (`/converter/com-imagens`)
+
+No markdown, use o placeholder `{{imagemN}}` no lugar da URL:
+
+```markdown
+![Ciclo do Plasmodium]({{imagem1}}){width=400px}
+```
+
+e envie os arquivos nos campos `imagem1`, `imagem2`, ... A API faz o upload
+de cada imagem para a **SML Storage API**, recebe a URL pública e substitui
+o placeholder antes da conversão (por isso `SML_STORAGE_API_KEY` precisa
+estar configurada no servidor).
+
+```bash
+curl -X POST http://localhost:8000/converter/com-imagens \
+     -H "X-API-Key: minha-chave" \
+     -F "arquivo=@modelos/modelo.md" \
+     -F "imagem1=@imagens/ciclo.png" \
+     -o documento.pdf
+```
+
+Regras: extensões aceitas `.jpg .jpeg .png .webp .gif`, máximo de 10 MB por
+imagem, e todo placeholder precisa do arquivo correspondente (e vice-versa) —
+inconsistências retornam erro 422 com mensagem explicativa.
+
+### Erros
+
+| Código | Situação |
+|--------|----------|
+| 401    | `X-API-Key` ausente ou inválida |
+| 422    | Markdown inválido (inclui o stderr do Pandoc), placeholder/arquivo inconsistente, imagem grande demais |
+| 502    | Falha no upload para a SML Storage |
+| 500    | Falha do Chromium ao gerar o PDF |
+| 503    | Dependência ausente no servidor (`/saude`) |
+
+### Docker
+
+O `Dockerfile` na raiz já inclui Python, Pandoc e o Chromium do Playwright:
+
+```bash
+docker build -t mkd-pandoc-api .
+
+docker run -p 8000:8000 \
+  -e API_KEY=minha-chave \
+  -e SML_STORAGE_API_KEY=chave-do-sml \
+  -e SML_PROJETO=meu-projeto \
+  mkd-pandoc-api
+```
+
+**Nota:** o container precisa de acesso à internet — o template carrega o
+Mermaid.js e as fontes (Nunito/Poppins) de CDNs. Sem rede de saída, os
+diagramas e as fontes não aparecem no PDF.
