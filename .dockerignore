@@ -1,0 +1,8 @@
+.git
+.gitignore
+modelos/
+scripts/
+saida/
+**/__pycache__/
+*.pyc
+readme.md

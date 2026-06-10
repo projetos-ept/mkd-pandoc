@@ -1,0 +1,5 @@
+fastapi~=0.115
+uvicorn[standard]~=0.34
+python-multipart~=0.0.20
+playwright~=1.56.0
+httpx~=0.28
