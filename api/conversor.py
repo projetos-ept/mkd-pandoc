@@ -9,12 +9,13 @@ levantando exceções para a camada HTTP traduzir em respostas.
 """
 
 import re
+import shutil
 import subprocess
 import tempfile
 import unicodedata
 from pathlib import Path
 
-from api.config import TEMPLATE, MERMAID_TIMEOUT
+from api.config import TEMPLATE, MERMAID_TIMEOUT, MERMAID_JS
 
 PANDOC_TIMEOUT = 60  # segundos
 
@@ -43,15 +44,23 @@ def converter(markdown: str, formato: str = "pdf") -> bytes:
 
         md.write_text(markdown, encoding="utf-8")
 
+        cmd = [
+            "pandoc",
+            str(md),
+            f"--template={TEMPLATE}",
+            "--standalone",
+            "-f", "markdown+fenced_divs+link_attributes",
+            "-o", str(html),
+        ]
+
+        # Se houver cópia local do mermaid.min.js, coloca-a ao lado do HTML
+        # e aponta o template para ela (renderiza os diagramas sem CDN).
+        if MERMAID_JS.exists():
+            shutil.copy(MERMAID_JS, tmpdir / "mermaid.min.js")
+            cmd += ["-V", "mermaid_src=mermaid.min.js"]
+
         resultado = subprocess.run(
-            [
-                "pandoc",
-                str(md),
-                f"--template={TEMPLATE}",
-                "--standalone",
-                "-f", "markdown+fenced_divs+link_attributes",
-                "-o", str(html),
-            ],
+            cmd,
             capture_output=True,
             text=True,
             timeout=PANDOC_TIMEOUT,

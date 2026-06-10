@@ -7,6 +7,7 @@ Variáveis:
   SML_STORAGE_API_KEY   chave x-api-key da SML Storage (só p/ rotas com imagens)
   SML_PROJETO           nome do projeto no SML Storage
   MERMAID_TIMEOUT       espera (ms) para o Mermaid.js renderizar antes do PDF
+  MERMAID_JS            caminho do mermaid.min.js local (fallback: CDN)
 """
 
 import os
@@ -28,3 +29,7 @@ SML_STORAGE_API_KEY = os.environ.get("SML_STORAGE_API_KEY", "")
 SML_PROJETO = os.environ.get("SML_PROJETO", "mkd-pandoc")
 
 MERMAID_TIMEOUT = int(os.environ.get("MERMAID_TIMEOUT", "2500"))
+
+# Cópia local do mermaid.min.js. Se existir, é injetada no HTML para que os
+# diagramas renderizem mesmo sem acesso ao CDN. Senão, o template usa o CDN.
+MERMAID_JS = Path(os.environ.get("MERMAID_JS", str(BASE / "assets" / "mermaid.min.js")))
