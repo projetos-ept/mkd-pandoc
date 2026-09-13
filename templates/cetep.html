@@ -18,7 +18,7 @@
        startOnLoad:false → controlamos quando renderizar (via DOMContentLoaded)
        securityLevel:"loose" → necessário para labels com HTML
   ──────────────────────────────────────────────────────────────── -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="$if(mermaid_src)$$mermaid_src$$else$https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js$endif$"></script>
   <script>
     mermaid.initialize({
       startOnLoad: false,

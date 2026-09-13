@@ -7,6 +7,8 @@ Variáveis:
   SML_STORAGE_API_KEY   chave x-api-key da SML Storage (só p/ rotas com imagens)
   SML_PROJETO           nome do projeto no SML Storage
   MERMAID_TIMEOUT       espera (ms) para o Mermaid.js renderizar antes do PDF
+  MERMAID_JS            caminho do mermaid.min.js local (fallback: CDN)
+  CORS_ORIGENS          domínios liberados no navegador (separados por vírgula)
 """
 
 import os
@@ -28,3 +30,16 @@ SML_STORAGE_API_KEY = os.environ.get("SML_STORAGE_API_KEY", "")
 SML_PROJETO = os.environ.get("SML_PROJETO", "mkd-pandoc")
 
 MERMAID_TIMEOUT = int(os.environ.get("MERMAID_TIMEOUT", "2500"))
+
+# Cópia local do mermaid.min.js. Se existir, é injetada no HTML para que os
+# diagramas renderizem mesmo sem acesso ao CDN. Senão, o template usa o CDN.
+MERMAID_JS = Path(os.environ.get("MERMAID_JS", str(BASE / "assets" / "mermaid.min.js")))
+
+# Origens liberadas para chamadas do navegador (CORS). Padrão: o GitHub Pages
+# da instituição. Defina CORS_ORIGENS com domínios separados por vírgula, ou
+# "*" para liberar qualquer origem.
+CORS_ORIGENS = [
+    o.strip()
+    for o in os.environ.get("CORS_ORIGENS", "https://projetos-ept.github.io").split(",")
+    if o.strip()
+]

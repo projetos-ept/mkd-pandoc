@@ -19,6 +19,7 @@ from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
@@ -43,6 +44,15 @@ app = FastAPI(
     description="Converte .md estruturado (tema CETEP-LNAB) em PDF/HTML.",
     version="1.0.0",
     lifespan=ciclo_de_vida,
+)
+
+# CORS: libera o navegador a chamar a API a partir do(s) domínio(s) do front
+# (ex.: GitHub Pages). Ajuste via env CORS_ORIGENS (lista separada por vírgula).
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.CORS_ORIGENS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "X-API-Key"],
 )
 
 
