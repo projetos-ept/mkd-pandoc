@@ -741,6 +741,19 @@ ambiente `API_KEY` definida no servidor.
 | `SML_STORAGE_API_KEY`  | só p/ imagens | —    | Chave `x-api-key` da SML Storage |
 | `SML_PROJETO`          | não         | `mkd-pandoc` | Nome do projeto no SML Storage |
 | `MERMAID_TIMEOUT`      | não         | `2500` | Espera (ms) para o Mermaid renderizar |
+| `CORS_ORIGENS`         | não         | `https://projetos-ept.github.io` | Domínios liberados no navegador (separados por vírgula; `*` libera todos) |
+
+### CORS (chamadas pelo navegador)
+
+Se você chama a API a partir de uma página no navegador (ex.: um front no
+GitHub Pages), o domínio precisa estar liberado por CORS — senão o navegador
+bloqueia a requisição. Por padrão já vem liberado `https://projetos-ept.github.io`.
+Para outro domínio (ou vários), defina `CORS_ORIGENS`:
+
+```bash
+CORS_ORIGENS="https://projetos-ept.github.io,https://meu-outro-site.com"
+```
+
 
 ### Rodando localmente
 
@@ -801,7 +814,8 @@ inconsistências retornam erro 422 com mensagem explicativa.
 
 ### Docker
 
-O `Dockerfile` na raiz já inclui Python, Pandoc e o Chromium do Playwright:
+O `Dockerfile` na raiz já inclui Python, Pandoc e o Chromium do Playwright
+(e baixa o Mermaid.js localmente, para renderizar diagramas sem depender de CDN):
 
 ```bash
 docker build -t mkd-pandoc-api .
@@ -813,6 +827,7 @@ docker run -p 8000:8000 \
   mkd-pandoc-api
 ```
 
-**Nota:** o container precisa de acesso à internet — o template carrega o
-Mermaid.js e as fontes (Nunito/Poppins) de CDNs. Sem rede de saída, os
-diagramas e as fontes não aparecem no PDF.
+**Nota:** as fontes (Nunito/Poppins) ainda vêm do Google Fonts por CDN, então
+o container precisa de acesso à internet para que as fontes apareçam no PDF.
+Os diagramas Mermaid já são renderizados a partir da cópia local embutida na
+imagem, sem depender de rede.
