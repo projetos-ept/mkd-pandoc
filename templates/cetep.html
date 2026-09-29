@@ -78,6 +78,24 @@
       --ambar-claro: #FFF8E1;   /* âmbar pastel — fundo exercícios */
       --rosa:        #AD1457;   /* rosa — leitura recomendada */
       --rosa-claro:  #FCE4EC;   /* rosa pastel — fundo leitura */
+
+      /* Cores dos blocos v4.0 (conteúdo, referência, dados e protocolo) —
+         reaproveitadas de projetos-ept/mkd-studio (mkd-studio.css) */
+      --glossario:         #1E3A5F;  --glossario-claro:   #EEF2F7;
+      --fluxo:             #4C1D95;  --fluxo-claro:       #F5F3FF;
+      --mapa:              #6B21A8;  --mapa-claro:        #FAF5FF;
+      --vocabulario:       #3B0764;  --vocabulario-claro: #FDF4FF;
+      --termometro:        #7F1D1D;  --termometro-claro:  #FAFAFA;
+      --cite:              #374151;  --cite-claro:        #F9FAFB;
+      --norma:             #1E40AF;  --norma-claro:       #EFF6FF;
+      --alerta-legal:      #991B1B;  --alerta-legal-claro:#FFF1F2;
+      --cronologia:        #92400E;  --cronologia-claro:  #FFFBEB;
+      --perfil:            #0369A1;  --perfil-claro:      #F0F9FF;
+      --caso-clinico:      #166534;  --caso-clinico-claro:#F0FDF4;
+      --comparativo:       #064E3B;  --comparativo-claro: #F0FDF4;
+      --valores:           #1D4ED8;  --valores-claro:     #EFF6FF;
+      --infodados:         #0369A1;  --infodados-claro:   #F0F9FF;
+      --protocolo:         #0F766E;  --protocolo-claro:   #F0FDFA;
     }
 
     /* ═══════════════════════════════════════════════════════════════
@@ -651,6 +669,470 @@
     }
     .markdown-body .referencias p { margin: 0 0 6px; color: #6b7a90; text-align: left; }
     .markdown-body .referencias p:last-child { margin-bottom: 0; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BLOCOS v4.0 — conteúdo, referência, dados e protocolo
+       Reaproveitados de projetos-ept/mkd-studio (paleta de cores e
+       nomenclatura). Mesmo padrão estrutural dos blocos acima: borda
+       esquerda colorida, fundo pastel, ícone via ::before, rótulo no
+       primeiro parágrafo.
+
+       Nota sobre campos "chave: valor" (perfil, caso-clinico,
+       infodados, termometro): como o front-end não usa a extensão
+       hard_line_breaks do Pandoc, cada linha de campo deve terminar
+       com uma barra invertida (\) para forçar a quebra de linha —
+       trailing spaces são frágeis (muitos editores removem espaços
+       no fim da linha ao salvar).
+    ═══════════════════════════════════════════════════════════════ */
+
+    /* ── ::: glossario — GLOSSÁRIO ──────────────────────────────── */
+    .markdown-body .glossario {
+      background: var(--glossario-claro);
+      border-left: 5px solid var(--glossario);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .glossario::before {
+      content: 'Gl';
+      position: absolute; left: 14px; top: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--glossario);
+    }
+    .markdown-body .glossario > p:first-child::before {
+      content: 'GLOSSÁRIO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--glossario);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .glossario p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .glossario p:last-child { margin-bottom: 0; }
+
+    /* ── ::: fluxo — FLUXO DO PROCESSO ──────────────────────────── */
+    .markdown-body .fluxo {
+      background: var(--fluxo-claro);
+      border-left: 5px solid var(--fluxo);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .fluxo::before {
+      content: '\2192';   /* → */
+      position: absolute; left: 16px; top: 13px;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--fluxo);
+    }
+    .markdown-body .fluxo > p:first-child::before,
+    .markdown-body .fluxo > ol:first-child::before {
+      content: 'FLUXO DO PROCESSO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--fluxo);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .markdown-body .fluxo p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .fluxo ol { margin: 0; padding-left: 20px; }
+    .markdown-body .fluxo ol li { font-size: 14px; margin-bottom: 6px; }
+
+    /* ── ::: mapa — MAPA CONCEITUAL ─────────────────────────────── */
+    .markdown-body .mapa {
+      background: var(--mapa-claro);
+      border-left: 5px solid var(--mapa);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .mapa::before {
+      content: '\1F5FA';   /* 🗺 */
+      position: absolute; left: 12px; top: 12px;
+      font-size: 18px;
+    }
+    .markdown-body .mapa > p:first-child::before {
+      content: 'MAPA CONCEITUAL';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--mapa);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .mapa p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .mapa p:last-child { margin-bottom: 0; }
+
+    /* ── ::: vocabulario — VOCABULÁRIO TÉCNICO ──────────────────── */
+    .markdown-body .vocabulario {
+      background: var(--vocabulario-claro);
+      border-left: 5px solid var(--vocabulario);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .vocabulario::before {
+      content: 'Vc';
+      position: absolute; left: 14px; top: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--vocabulario);
+    }
+    .markdown-body .vocabulario > p:first-child::before {
+      content: 'VOCABULÁRIO TÉCNICO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--vocabulario);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .vocabulario p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .vocabulario p:last-child { margin-bottom: 0; }
+
+    /* ── ::: termometro — NÍVEL DE COMPLEXIDADE ─────────────────── */
+    /* Primeira linha do bloco: "nivel: baixo|referencia|elevado".
+       Sem filtro Lua no pipeline, o valor aparece como texto — o
+       bloco recebe apenas a cor/rótulo de destaque.               */
+    .markdown-body .termometro {
+      background: var(--termometro-claro);
+      border-left: 5px solid var(--termometro);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .termometro::before {
+      content: '\1F321';   /* 🌡 */
+      position: absolute; left: 13px; top: 12px;
+      font-size: 18px;
+    }
+    .markdown-body .termometro > p:first-child::before {
+      content: 'NÍVEL DE COMPLEXIDADE';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--termometro);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .termometro p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .termometro p:last-child { margin-bottom: 0; }
+
+    /* ── ::: cite — CITAÇÃO ──────────────────────────────────────── */
+    .markdown-body .cite {
+      background: var(--cite-claro);
+      border-left: 5px solid var(--cite);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+      font-style: italic;
+    }
+    .markdown-body .cite::before {
+      content: '\201C';   /* " */
+      position: absolute; left: 14px; top: 4px;
+      font-size: 34px;
+      font-style: normal;
+      font-weight: 900;
+      color: var(--cite);
+      line-height: 1;
+    }
+    .markdown-body .cite > p:first-child::before {
+      content: 'CITAÇÃO';
+      font-family: 'Poppins', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--cite);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .cite p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .cite p:last-child { margin-bottom: 0; font-style: normal; font-size: 12.5px; color: #6b7a90; }
+
+    /* ── ::: norma — NORMA E LEGISLAÇÃO ──────────────────────────── */
+    .markdown-body .norma {
+      background: var(--norma-claro);
+      border-left: 5px solid var(--norma);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .norma::before {
+      content: '\2696';   /* ⚖ */
+      position: absolute; left: 13px; top: 13px;
+      font-size: 18px;
+      color: var(--norma);
+    }
+    .markdown-body .norma > p:first-child::before {
+      content: 'NORMA E LEGISLAÇÃO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--norma);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .norma p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .norma p:last-child { margin-bottom: 0; }
+
+    /* ── ::: alerta-legal — ALERTA LEGAL ─────────────────────────── */
+    .markdown-body .alerta-legal {
+      background: var(--alerta-legal-claro);
+      border: 1.5px solid #fca5a5;
+      border-left: 5px solid var(--alerta-legal);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .alerta-legal::before {
+      content: '\26A0';   /* ⚠ */
+      position: absolute; left: 13px; top: 12px;
+      font-size: 20px;
+      color: var(--alerta-legal);
+    }
+    .markdown-body .alerta-legal > p:first-child::before {
+      content: 'ALERTA LEGAL';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--alerta-legal);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .markdown-body .alerta-legal p { margin: 0 0 8px; font-size: 14px; text-align: left; }
+    .markdown-body .alerta-legal p:last-child { margin-bottom: 0; }
+
+    /* ── ::: cronologia — LINHA DO TEMPO ─────────────────────────── */
+    .markdown-body .cronologia {
+      background: var(--cronologia-claro);
+      border-left: 5px solid var(--cronologia);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .cronologia::before {
+      content: '\23F1';   /* ⏱ */
+      position: absolute; left: 13px; top: 13px;
+      font-size: 18px;
+      color: var(--cronologia);
+    }
+    .markdown-body .cronologia > p:first-child::before,
+    .markdown-body .cronologia > ul:first-child::before {
+      content: 'LINHA DO TEMPO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--cronologia);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .markdown-body .cronologia ul { list-style: none; margin: 0; padding: 0; }
+    .markdown-body .cronologia ul li {
+      font-size: 14px;
+      margin-bottom: 6px;
+      padding-left: 0;
+      background: none;
+    }
+    .markdown-body .cronologia ul li::before { content: none; }
+    .markdown-body .cronologia ul li strong { color: var(--cronologia); }
+
+    /* ── ::: perfil — FICHA DO AGENTE ────────────────────────────── */
+    .markdown-body .perfil {
+      background: var(--perfil-claro);
+      border-left: 5px solid var(--perfil);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .perfil::before {
+      content: '\1F9EC';   /* 🧬 */
+      position: absolute; left: 12px; top: 13px;
+      font-size: 18px;
+    }
+    .markdown-body .perfil > p:first-child::before {
+      content: 'FICHA DO AGENTE';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--perfil);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .markdown-body .perfil p { margin: 0 0 8px; font-size: 14px; text-align: left; line-height: 1.7; }
+    .markdown-body .perfil p:last-child { margin-bottom: 0; }
+    .markdown-body .perfil p br { line-height: 1.9; }
+
+    /* ── ::: caso-clinico — CASO CLÍNICO ─────────────────────────── */
+    .markdown-body .caso-clinico {
+      background: var(--caso-clinico-claro);
+      border-left: 5px solid var(--caso-clinico);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .caso-clinico::before {
+      content: '\1FA7A';   /* 🩺 */
+      position: absolute; left: 12px; top: 13px;
+      font-size: 18px;
+    }
+    .markdown-body .caso-clinico > p:first-child::before {
+      content: 'CASO CLÍNICO';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--caso-clinico);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .markdown-body .caso-clinico p { margin: 0 0 8px; font-size: 14px; text-align: left; line-height: 1.7; }
+    .markdown-body .caso-clinico p:last-child { margin-bottom: 0; }
+
+    /* ── ::: comparativo — TABELA COMPARATIVA ────────────────────── */
+    .markdown-body .comparativo {
+      background: var(--comparativo-claro);
+      border-left: 5px solid var(--comparativo);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .markdown-body .comparativo::before {
+      content: 'COMPARATIVO';
+      display: block;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--comparativo);
+      margin-bottom: 8px;
+    }
+    .markdown-body .comparativo table { margin: 0; font-size: 13px; }
+    .markdown-body .comparativo thead th { background: var(--comparativo); }
+
+    /* ── ::: valores — VALORES DE REFERÊNCIA ─────────────────────── */
+    .markdown-body .valores {
+      background: var(--valores-claro);
+      border-left: 5px solid var(--valores);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .markdown-body .valores::before {
+      content: 'VALORES DE REFERÊNCIA';
+      display: block;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--valores);
+      margin-bottom: 8px;
+    }
+    .markdown-body .valores table { margin: 0; font-size: 13px; }
+    .markdown-body .valores thead th { background: var(--valores); }
+
+    /* ── ::: infodados — DADO EM DESTAQUE ─────────────────────────── */
+    .markdown-body .infodados {
+      background: var(--infodados-claro);
+      border-left: 5px solid var(--infodados);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .infodados::before {
+      content: '#';
+      position: absolute; left: 16px; top: 12px;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--infodados);
+    }
+    .markdown-body .infodados > p:first-child::before {
+      content: 'DADO EM DESTAQUE';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--infodados);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .markdown-body .infodados p { margin: 0 0 8px; font-size: 14px; text-align: left; line-height: 1.7; }
+    .markdown-body .infodados p:last-child { margin-bottom: 0; }
+
+    /* ── ::: protocolo — PROTOCOLO OPERACIONAL (POP) ─────────────── */
+    .markdown-body .protocolo {
+      background: var(--protocolo-claro);
+      border-left: 5px solid var(--protocolo);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px 16px 52px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-body .protocolo::before {
+      content: '\1F4CB';   /* 📋 */
+      position: absolute; left: 12px; top: 13px;
+      font-size: 18px;
+    }
+    .markdown-body .protocolo > p:first-child::before {
+      content: 'PROTOCOLO OPERACIONAL (POP)';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--protocolo);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .markdown-body .protocolo p { margin: 0 0 8px; font-size: 14px; text-align: left; line-height: 1.7; }
+    .markdown-body .protocolo ul,
+    .markdown-body .protocolo ol { margin: 8px 0 14px; padding-left: 20px; }
+    .markdown-body .protocolo ul li,
+    .markdown-body .protocolo ol li { font-size: 14px; margin-bottom: 6px; }
+    .markdown-body .protocolo ul { list-style: none; }
+    .markdown-body .protocolo ul li { position: relative; padding-left: 16px; background: none; }
+    .markdown-body .protocolo ul li::before {
+      content: '\2013';   /* – */
+      position: absolute; left: 0; color: var(--protocolo);
+    }
 
     /* ═══════════════════════════════════════════════════════════════
        DIAGRAMAS MERMAID

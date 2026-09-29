@@ -1,8 +1,11 @@
 FROM python:3.12-slim-bookworm
 
-# Pandoc (etapa 1 do pipeline) + curl para baixar o Mermaid
+# Pandoc (etapa 1 do pipeline) + curl para baixar o Mermaid + fonte de
+# emoji colorido (sem ela, os ícones dos blocos ::: — 📖, 🧬, 🩺, 🗺, 📋,
+# 🌡 — caem para um glifo em preto e branco no PDF gerado pelo Chromium)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends pandoc curl ca-certificates \
+    && apt-get install -y --no-install-recommends \
+         pandoc curl ca-certificates fonts-noto-color-emoji \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

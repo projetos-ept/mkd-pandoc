@@ -484,6 +484,74 @@ Funciona normalmente dentro de qualquer bloco:
 
 ---
 
+## Blocos v4.0 — conteúdo, referência, dados e protocolo
+
+15 blocos adicionais, reaproveitados do design system de
+[`projetos-ept/mkd-studio`](https://github.com/projetos-ept/mkd-studio)
+(mesmas cores e nomenclatura). Seguem o mesmo padrão dos 9 blocos
+acima — fenced div `:::`, sem dependência de filtro Lua.
+
+> **Campos "chave: valor" (perfil, caso-clinico, infodados, protocolo):**
+> como o Pandoc não usa a extensão `hard_line_breaks` neste pipeline,
+> escreva os campos **sem linha em branco entre eles** e termine cada
+> linha (exceto a última) com uma barra invertida `\` — é a sintaxe
+> padrão do Markdown para forçar quebra de linha dentro do mesmo
+> parágrafo. Sem a barra, os campos aparecem grudados numa linha só.
+
+### Grupo B — Conteúdo
+
+| Bloco | Cor | Rótulo | Sintaxe |
+|---|---|---|---|
+| `::: glossario` | Azul-marinho | GLOSSÁRIO | `**Termo:** definição`, um por parágrafo |
+| `::: fluxo` | Roxo-escuro | FLUXO DO PROCESSO | Lista numerada `1. 2. 3.` |
+| `::: mapa` | Roxo | MAPA CONCEITUAL | Texto dissertativo conectando conceitos |
+| `::: vocabulario` | Roxo-escuro | VOCABULÁRIO TÉCNICO | Igual ao `glossario`, tom técnico |
+| `::: termometro` | Vermelho-escuro | NÍVEL DE COMPLEXIDADE | 1ª linha: `nivel: baixo\|referencia\|elevado` |
+
+### Grupo C — Referência
+
+| Bloco | Cor | Rótulo | Sintaxe |
+|---|---|---|---|
+| `::: cite` | Cinza-escuro | CITAÇÃO | Parágrafo(s) + referência completa no último |
+| `::: norma` | Azul | NORMA E LEGISLAÇÃO | `**RDC/ISO/Lei**: descrição` |
+| `::: alerta-legal` | Vermelho | ALERTA LEGAL | Consequências legais/éticas |
+| `::: cronologia` | Âmbar-escuro | LINHA DO TEMPO | `- **ANO** — evento` |
+
+### Grupo D — Dados e estruturados
+
+| Bloco | Cor | Rótulo | Campos / sintaxe |
+|---|---|---|---|
+| `::: perfil` | Azul-céu | FICHA DO AGENTE | `nome`/`classificacao`/`hospedeiro`/`via`/`diagnostico`/`tratamento`/`prevalencia` |
+| `::: caso-clinico` | Verde-escuro | CASO CLÍNICO | `paciente`/`queixa`/`historico`/`exames`/`resultado`/`conduta` |
+| `::: infodados` | Azul-céu | DADO EM DESTAQUE | `numero`/`unidade`/`texto`/`fonte` |
+| `::: comparativo` | Verde-escuro | COMPARATIVO | Tabela Markdown — linha em branco antes e depois |
+| `::: valores` | Azul | VALORES DE REFERÊNCIA | Tabela `\| Parâmetro \| Faixa \| Unidade \| Grupo \|` (Grupo: H/M/C) |
+
+### Grupo E — Protocolo
+
+| Bloco | Cor | Rótulo | Sintaxe |
+|---|---|---|---|
+| `::: protocolo` | Teal-escuro | PROTOCOLO OPERACIONAL (POP) | Campos `codigo`/`revisao`/`setor`, depois três listas na ordem: Materiais (hífen) → Etapas (numerada) → Alertas (hífen) |
+
+Exemplo completo de `::: perfil`:
+
+```markdown
+::: perfil
+nome: Plasmodium falciparum\
+classificacao: Protozoário Apicomplexa\
+hospedeiro: Anopheles / Humano\
+diagnostico: Gota espessa
+:::
+```
+
+> **Ícones e emoji:** os blocos `leitura` (📖) e os novos `perfil` (🧬),
+> `caso-clinico` (🩺), `mapa` (🗺), `protocolo` (📋) e `termometro` (🌡)
+> usam emoji Unicode no CSS. O Dockerfile instala `fonts-noto-color-emoji`
+> para que apareçam coloridos no PDF gerado pelo Chromium headless —
+> sem essa fonte, caem para um glifo em preto e branco.
+
+---
+
 ## Imagens
 
 ### Sintaxe básica com legenda
@@ -831,3 +899,10 @@ docker run -p 8000:8000 \
 o container precisa de acesso à internet para que as fontes apareçam no PDF.
 Os diagramas Mermaid já são renderizados a partir da cópia local embutida na
 imagem, sem depender de rede.
+
+> **Rebuild necessário após mudanças no `templates/cetep.html` ou no
+> `Dockerfile`:** este repositório não redeploya sozinho — se você roda
+> a API no Cloud Run (ou qualquer outro serviço gerenciado), é preciso
+> reconstruir a imagem e publicar a nova revisão manualmente após dar
+> `git pull` nas mudanças. Sem isso, o serviço em produção continua
+> servindo a versão antiga do template/imagem indefinidamente.
