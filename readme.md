@@ -525,7 +525,7 @@ acima — fenced div `:::`, sem dependência de filtro Lua.
 | `::: caso-clinico` | Verde-escuro | CASO CLÍNICO | `paciente`/`queixa`/`historico`/`exames`/`resultado`/`conduta` |
 | `::: infodados` | Azul-céu | DADO EM DESTAQUE | `numero`/`unidade`/`texto`/`fonte` |
 | `::: comparativo` | Verde-escuro | COMPARATIVO | Tabela Markdown — linha em branco antes e depois |
-| `::: valores` | Azul | VALORES DE REFERÊNCIA | Tabela `\| Parâmetro \| Faixa \| Unidade \| Grupo \|` (Grupo: H/M/C) |
+| `::: valores` | Azul | VALORES DE REFERÊNCIA | Tabela `\| Parâmetro \| Faixa \| Unidade \| Grupo \|` (Grupo: H/M/C — faixa idêntica entre grupos vira uma linha só, ex. "H/M", em vez de repetir a linha) |
 
 ### Grupo E — Protocolo
 
