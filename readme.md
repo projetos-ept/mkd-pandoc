@@ -610,6 +610,17 @@ Salve em `documentos/imagens/` e use caminho relativo:
 O template inclui o Mermaid.js, que renderiza automaticamente
 blocos de código marcados como `mermaid`.
 
+> **PDF vs. HTML standalone:** no PDF, o Mermaid.js é embutido a partir
+> da cópia local (`assets/mermaid.min.js`, baixada no build do Docker) —
+> o Chromium abre o HTML intermediário localmente, então a referência
+> relativa funciona sem depender de rede. No formato **HTML** (arquivo
+> standalone devolvido pela API), isso não é possível — o arquivo é
+> hospedado sozinho, sem a cópia local ao lado — então ele carrega o
+> Mermaid.js de um CDN (jsdelivr) quando alguém abre o link depois.
+> Isso significa que o HTML gerado precisa de internet pra renderizar
+> os diagramas (diferente das imagens, que já ficam embutidas em base64
+> pelo mkd-pdf).
+
 ### Fluxograma vertical
 
 ````markdown
