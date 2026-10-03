@@ -53,9 +53,15 @@ def converter(markdown: str, formato: str = "pdf") -> bytes:
             "-o", str(html),
         ]
 
-        # Se houver cópia local do mermaid.min.js, coloca-a ao lado do HTML
-        # e aponta o template para ela (renderiza os diagramas sem CDN).
-        if MERMAID_JS.exists():
+        # Cópia local do mermaid.min.js só faz sentido pro PDF: o Chromium
+        # carrega o HTML de um arquivo temporário via file://, então um
+        # <script src="mermaid.min.js"> relativo funciona enquanto o
+        # arquivo estiver ao lado. Pro formato "html", o arquivo retornado
+        # é standalone (vai pro storage sozinho, sem o mermaid.min.js do
+        # lado) — ali o template já cai sozinho no fallback de CDN
+        # (templates/cetep.html: $if(mermaid_src)$...$else$ CDN $endif$)
+        # se a gente simplesmente não passar essa variável.
+        if formato != "html" and MERMAID_JS.exists():
             shutil.copy(MERMAID_JS, tmpdir / "mermaid.min.js")
             cmd += ["-V", "mermaid_src=mermaid.min.js"]
 
