@@ -901,8 +901,28 @@ Os diagramas Mermaid já são renderizados a partir da cópia local embutida na
 imagem, sem depender de rede.
 
 > **Rebuild necessário após mudanças no `templates/cetep.html` ou no
-> `Dockerfile`:** este repositório não redeploya sozinho — se você roda
-> a API no Cloud Run (ou qualquer outro serviço gerenciado), é preciso
-> reconstruir a imagem e publicar a nova revisão manualmente após dar
-> `git pull` nas mudanças. Sem isso, o serviço em produção continua
-> servindo a versão antiga do template/imagem indefinidamente.
+> `Dockerfile`:** este repositório não redeploya sozinho — não há gatilho
+> de Cloud Build nem GitHub Actions ligado ao serviço. Depois de mesclar
+> em `main`, é preciso reconstruir a imagem e publicar a nova revisão
+> manualmente. Sem isso, o serviço em produção continua servindo a
+> versão antiga do template/imagem indefinidamente.
+
+#### Redeploy manual em produção (Cloud Run)
+
+A instância em produção roda no projeto `diario-de-bordo-cetep`, serviço
+`mkd-pandoc`, região `us-central1`. Mais rápido pelo **Cloud Shell**
+(100% no navegador, sem precisar de `gcloud` local):
+
+```bash
+git clone https://github.com/projetos-ept/mkd-pandoc.git
+cd mkd-pandoc
+gcloud builds submit --tag us-central1-docker.pkg.dev/diario-de-bordo-cetep/mkd-pandoc/mkd-pandoc:latest .
+gcloud run deploy mkd-pandoc \
+  --image us-central1-docker.pkg.dev/diario-de-bordo-cetep/mkd-pandoc/mkd-pandoc:latest \
+  --region us-central1
+```
+
+O build leva uns 3-4 min. As variáveis de ambiente (`API_KEY`,
+`SML_PROJETO` etc.) já ficam salvas na revisão anterior do serviço — o
+`gcloud run deploy` com só `--image` preserva a configuração existente,
+não precisa repassar `-e` de novo.
